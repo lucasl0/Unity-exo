@@ -8,6 +8,18 @@ public class playermovement : MonoBehaviour
 
     public float jumpForce = 7;
 
+    public Transform groundCheck;
+
+    public float groundCheckRadius = 0.2f;
+
+    public bool isGrounded = false;
+    
+    public LayerMask listGroundLayers;
+
+    public int maxAllowedJumps = 3;
+    public int currentNumberJumps = 0;
+    public bool isFacingRight = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -18,11 +30,29 @@ public class playermovement : MonoBehaviour
     void Update()
     {
         moveDirectionX = Input.GetAxis("Horizontal");
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetButtonDown("Jump") 
+        && currentNumberJumps < maxAllowedJumps)
         {
             Jump();
+            currentNumberJumps++;
         }
-    }
+        if (
+            isGrounded && 
+            !Input.GetButton("Jump")
+            ){
+                currentNumberJumps = 0;
+                }
+                Flip();
+    } 
+     void Flip(){
+        if (
+            (moveDirectionX > 0 && !isFacingRight) ||
+            (moveDirectionX < 0 && isFacingRight)
+        ){
+            transform.Rotate(0,180,0);
+            isFacingRight = !isFacingRight;
+        }
+    }         
     private void Jump(){
         rb.linearVelocity = new Vector2(
             rb.linearVelocity.x,
@@ -34,5 +64,25 @@ public class playermovement : MonoBehaviour
             moveDirectionX * moveSpeed,
             rb.linearVelocity.y
         );
+        isGrounded = IsGrounded();
+    }
+    public bool IsGrounded(){
+        return Physics2D.OverlapCircle(
+            groundCheck.position,
+            groundCheckRadius,
+            listGroundLayers
+        );
+        }
+    private void OnDrawGizmos() {
+        if (groundCheck != null ){
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawSphere(
+            groundCheck.position,
+            groundCheckRadius
+        );
+        }
+    
     }
 }
+
+
