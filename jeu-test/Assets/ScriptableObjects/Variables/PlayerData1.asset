@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 638ebefe432946e4484dfddf47665746, type: 3}
   m_Name: PlayerData1
   m_EditorClassIdentifier: 
+  currentLifePoints: 3
+  maxLifePoints: 3
