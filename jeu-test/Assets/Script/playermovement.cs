@@ -19,11 +19,22 @@ public class playermovement : MonoBehaviour
     public int maxAllowedJumps = 3;
     public int currentNumberJumps = 0;
     public bool isFacingRight = false;
+    public voidEventChannel onPlayerDeath;
+    private void OnEnable(){
+        onPlayerDeath.OnEventRaised += Die;
+
+    }
+    private void OnDisable(){
+        onPlayerDeath.OnEventRaised -= Die;
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         
+    }
+    void Die(){
+        enabled = false;
     }
 
     // Update is called once per frame

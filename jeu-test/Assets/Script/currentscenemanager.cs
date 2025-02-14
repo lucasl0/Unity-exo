@@ -2,10 +2,22 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class currentscenemanager : MonoBehaviour
 {
+    public GameObject gameOverScreen;
+    public voidEventChannel onPlayerDeath;
+    private void OnEnable(){
+        onPlayerDeath.OnEventRaised += Die;
+    }
+    private void OnDisable(){
+        onPlayerDeath.OnEventRaised -= Die;
+    }
+    private void Die(){
+        gameOverScreen.SetActive(true);
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        gameOverScreen.SetActive(false);
     }
 
     // Update is called once per frame
@@ -21,9 +33,12 @@ public class currentscenemanager : MonoBehaviour
         }
     
     if(Input.GetKeyDown(KeyCode.R)){
-    SceneManager.LoadScene(
+        RestartGame();
+    }
+    }
+    public void RestartGame(){
+        SceneManager.LoadScene(
         SceneManager.GetActiveScene().name
     );
-    }
     }
 }
