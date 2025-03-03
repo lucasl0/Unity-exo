@@ -1,44 +1,74 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-public class currentscenemanager : MonoBehaviour
+
+public class CurrentSceneManager : MonoBehaviour
 {
     public GameObject gameOverScreen;
+    public GameObject pauseScreen;
+    public GameObject player; // Assigner le joueur dans l'inspecteur
+
     public voidEventChannel onPlayerDeath;
-    private void OnEnable(){
+
+    private bool isPaused = false;
+
+    private void OnEnable()
+    {
         onPlayerDeath.OnEventRaised += Die;
     }
-    private void OnDisable(){
+
+    private void OnDisable()
+    {
         onPlayerDeath.OnEventRaised -= Die;
     }
-    private void Die(){
-        gameOverScreen.SetActive(true);
-    }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
         gameOverScreen.SetActive(false);
+        pauseScreen.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape)){
-            if(Time.timeScale == 0){
-                Time.timeScale = 1;
-            }
-            else{
-                Time.timeScale = 0;
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RestartGame();
+        }
+    }
+
+    private void Die()
+    {
+        gameOverScreen.SetActive(true);
+        LockPlayerMovement(true);
+    }
+
+    public void TogglePause()
+    {
+        isPaused = !isPaused;
+        pauseScreen.SetActive(isPaused);
+        Time.timeScale = isPaused ? 0 : 1;
+        LockPlayerMovement(isPaused);
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1; // Réinitialiser le temps
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private void LockPlayerMovement(bool lockMovement)
+    {
+        if (player != null)
+        {
+            var playerController = player.GetComponent<playermovement>(); 
+            if (playerController != null)
+            {
+                playerController.enabled = !lockMovement;
             }
         }
-    
-    if(Input.GetKeyDown(KeyCode.R)){
-        RestartGame();
-    }
-    }
-    public void RestartGame(){
-        SceneManager.LoadScene(
-        SceneManager.GetActiveScene().name
-    );
     }
 }
