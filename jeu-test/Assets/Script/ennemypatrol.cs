@@ -8,6 +8,8 @@ public class ennemypatrol : MonoBehaviour
 
     public LayerMask listObstacleLayers;
 
+    public Animator animator;
+
     public float groundCheckRadius = 0.15f;
     public bool isFacingRight = false;
     public float distanceDetection = 0.6f;
@@ -16,6 +18,9 @@ public class ennemypatrol : MonoBehaviour
     // if (rb.linearVelocity.y !=0){
     //     return;
     // }
+    animator.SetFloat("velocityX",Mathf.Abs( rb.linearVelocityX));
+    animator.SetFloat("velocityY",rb.linearVelocityY);
+        
     rb.linearVelocity = new Vector2(
         moveSpeed * transform.right.normalized.x,
         rb.linearVelocity.y
