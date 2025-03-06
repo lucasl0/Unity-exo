@@ -13,9 +13,9 @@ public class ennemypatrol : MonoBehaviour
     public float distanceDetection = 0.6f;
 
     void FixedUpdate(){
-    if (rb.linearVelocity.y !=0){
-        return;
-    }
+    // if (rb.linearVelocity.y !=0){
+    //     return;
+    // }
     rb.linearVelocity = new Vector2(
         moveSpeed * transform.right.normalized.x,
         rb.linearVelocity.y

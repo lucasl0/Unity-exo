@@ -18,6 +18,8 @@ public class playermovement : MonoBehaviour
     
     public LayerMask listGroundLayers;
 
+    public Animator animator;
+
     public int maxAllowedJumps = 3;
     public int currentNumberJumps = 0;
     public bool isFacingRight = false;
@@ -44,12 +46,19 @@ public class playermovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        animator.SetFloat("velocityX",Mathf.Abs( rb.linearVelocityX));
+        animator.SetFloat("velocityY",rb.linearVelocityY);
+        animator.SetBool("isGrounded",isGrounded);
+
         moveDirectionX = Input.GetAxis("Horizontal");
         if(Input.GetButtonDown("Jump") 
         && currentNumberJumps < maxAllowedJumps)
         {
             Jump();
             currentNumberJumps++;
+            if (currentNumberJumps>1){
+            animator.SetTrigger("Doublejump");
+            }
         }
         if (
             isGrounded && 
